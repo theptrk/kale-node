@@ -1,10 +1,12 @@
 'use strict';
 var User = require('../models/user');
 
+// views are manually routed to `auth/`
+
 module.exports = function(app, passport){
   // HOME PAGE
   app.get('/auth', function(req, res){
-    res.render('auth.ejs');
+    res.render('auth/auth');
   });
 
   // REST ENDPOINTS
@@ -17,7 +19,7 @@ module.exports = function(app, passport){
   // LOGIN
   app.route('/login')
     .get(function(req, res){
-      res.render('login.ejs', { message: req.flash('loginMessage')});
+      res.render('auth/login', { message: req.flash('loginMessage')});
     })
     .post(passport.authenticate('local-login', {
       successRedirect : '/profile',
@@ -30,7 +32,7 @@ module.exports = function(app, passport){
     // === local ===
       app.route('/signup')
         .get(function(req, res){
-          res.render('signup.ejs', { message: req.flash('signupMessage') });
+          res.render('auth/signup', { message: req.flash('signupMessage') });
         })
         .post(passport.authenticate('local-signup', {
           successRedirect: '/profile', // this could instead be a callback
@@ -51,7 +53,7 @@ module.exports = function(app, passport){
     // === local ===
       app.route('/connect/local')
         .get(function(req, res){
-          res.render('connect-local.ejs', { message: req.flash('loginMessage') });
+          res.render('auth/connect-local', { message: req.flash('loginMessage') });
         })
         .post(passport.authenticate('local-signup', {
           successRedirect : '/profile',
@@ -89,7 +91,7 @@ module.exports = function(app, passport){
 
   // PROFILE
   app.get('/profile', isLoggedIn, function(req, res){
-    res.render('profile.ejs', {
+    res.render('auth/profile', {
       user : req.user // get the user out of session and pass to template
     });
   });
