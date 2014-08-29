@@ -5,8 +5,10 @@ var User = require('../models/user');
 
 module.exports = function(app, passport){
   // HOME PAGE
-  app.get('/auth', function(req, res){
-    res.render('auth/auth');
+  app.get('/auth', directProfile, function(req, res){
+    res.render('auth/auth', {
+      user : req.user // get the user out of session and pass to template
+    });
   });
 
   // REST ENDPOINTS
@@ -18,7 +20,7 @@ module.exports = function(app, passport){
 
   // LOGIN
   app.route('/login')
-    .get(function(req, res){
+    .get(directProfile, function(req, res){
       res.render('auth/login', { message: req.flash('loginMessage')});
     })
     .post(passport.authenticate('local-login', {
@@ -111,4 +113,11 @@ function isLoggedIn(req, res, next){
 
   // if they aren't redirect
   res.redirect('/');
+}
+
+function directProfile(req, res, next){
+  if (req.isAuthenticated()) {
+    res.redirect('/profile');
+  }
+  return next();
 }
