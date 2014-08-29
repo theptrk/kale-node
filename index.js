@@ -48,12 +48,6 @@ var appConfig = require('./config/appConfig');
 app.get('/', function(req, res){
   res.render('index.html');
 });
-app.get('/nunjucks', function(req, res){
-  res.render('nunjucks2.html', {name: "Patrick"});
-});
-app.get('/base', function(req, res){
-  res.render('base.html');
-});
 
 // Page routes
 require('./app/routes/auth.js')(app, passport);
