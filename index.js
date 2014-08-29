@@ -46,7 +46,10 @@ var appConfig = require('./config/appConfig');
   });
 
 app.get('/', function(req, res){
-  res.render('index.html');
+  //res.render('index.html');
+  res.render('home/layout', {
+    user : req.user // get the user out of session and pass to template
+  });
 });
 
 // Page routes
