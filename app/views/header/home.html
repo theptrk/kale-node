@@ -1,5 +1,6 @@
- <link rel="stylesheet" href="public/css/header/home.css">
- <div class="navbar navbar-default navbar-static-top">
+<link rel="stylesheet" href="public/css/header/home.css">
+
+<div class="navbar navbar-default navbar-static-top">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,23 +17,19 @@
         <li><a href="#contact">Other</a></li>
       </ul> -->
       <ul class="nav navbar-nav navbar-right">
-        {% if user %}
-          <li><a href="/profile">{{user.updated}}</a></li>
-        {% else %}
-          {{user.name}}
-        {% endif %}
+        {% if user.displayName.length > 0 %}
         <li class=""><a href="/feed" title="">Feed</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.displayName}} <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="http://docs.ironframework.io/">Iron</a></li>
-            <li><a href="http://docs.ironframework.io/core">Core</a></li>
+            <li><a href="/profile">Profile</a></li>
             <li class="divider"></li>
             <li class="dropdown-header">Authentication</li>
-            <li><a href="/auth">Auth</a></li>
-            <!-- <li><a href="/profile">Profile</a></li> -->
-            <!-- <li><a href="/logout">Logout</a></li> -->
+            <li class=""><a href="#" title="">Log out</a></li>
           </ul>
+          {% else %}
+            <li class=""><a href="/auth" title="">Sign up</a></li>
+          {% endif %}
         </li>
       </ul>
     </div><!--/.nav-collapse -->
