@@ -23,7 +23,7 @@ var spotSchema = mongoose.Schema({
     ref: 'Review'
   }],
   ratings: [ Number ],
-  average: [],
+  average: Number,
   created: Date,
   updated: Date
 });
