@@ -17,7 +17,7 @@ var reviewSchema = mongoose.Schema({
   }, 
   body: String,
   photos: [{ url: String, caption: String }],
-  created: Date,
+  created: {type: Date, index: true },
   updated: Date
 });
 
