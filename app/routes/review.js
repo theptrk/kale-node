@@ -27,4 +27,16 @@ reviewRouter.route('/feed/')
     });
   });
 
+reviewRouter.route('/feed/:limit/:date')
+  .get(function(req, res){
+    Review
+    .find({ created: { $lt: req.params.date }})
+    .sort({ created: -1 })
+    .limit(20)
+    .exec(function(err, reviews){
+      if (err) { res.send(err); }
+      res.json(reviews);
+    });
+  });
+
 module.exports = reviewRouter;
