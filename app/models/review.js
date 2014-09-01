@@ -3,10 +3,6 @@ var mongoose = require('mongoose');
 var saveDate = require('./model_utils').saveDate;
 
 var reviewSchema = mongoose.Schema({
-  // author: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User'
-  // },      
   spot: {
     type: mongoose.Schema.ObjectId,
     ref: 'Spot'
