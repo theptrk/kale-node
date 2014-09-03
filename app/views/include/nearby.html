@@ -1,0 +1,110 @@
+<h3>Nearby</h3>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOiH9wDPqT3UQRsXtApgLtNhLoyY3llCw">
+</script>
+<style type="text/css">
+  /* height is set as a jinja variable */
+  #map-canvas { height: {{google_maps_height}}; }
+</style>
+<script type="text/javascript">
+  var map, infowindow, geocoder, pos;
+
+  function initialize() {
+    var mapOptions = {
+      zoom: 12,
+      panControl: false,
+      mapTypeControl: false,
+    };
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    geocoder = new google.maps.Geocoder();
+    // Ask for HTML5 geolocation permission
+    if ( navigator.geolocation ) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      // Browser doesn't support Geolocation
+      handleNoGeolocation(false);
+    }
+  }
+
+  var success = function(position) {
+    var pos = new google.maps.LatLng(position.coords.latitude,
+                                     position.coords.longitude);
+
+    infowindow = new google.maps.InfoWindow({
+      maxWidth: 400,
+      content: '<h1>Location found using HTML5.Location found using HTML5.Location found using HTML5.Location found using HTML5.Location found using HTML5.</h1><h1>Location found using HTML5.</h1>'
+    });
+    map.setCenter(pos); 
+    blueballMarker(pos); // current location marker
+    //geocode(pos); // figure out the long form address 
+  };
+  var error = function() {
+    handleNoGeolocation(true);
+  };
+  var makeMarker = function(location, title, content){
+
+    var pos = new google.maps.LatLng(location[0], location[1]);
+    var marker = new google.maps.Marker({
+      position: pos,
+      map: map,
+      title: title,
+      animation: google.maps.Animation.DROP,
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(
+        "<h4>"+ title +"</h4>" + " " + starMaker(content));
+      infowindow.open(map, this);
+    });
+  };
+
+  var starMaker = function(num) {
+    num = Number(num);
+    var str = "";
+    for (var i = 0; i < Math.floor(num); i++) {
+      str += "<i class='fa fa-star' style='color:#12960E'></i>";
+    }
+    if (num !== Math.floor(num)) {
+      console.log('obj');
+      str += "<i class='fa fa-star-half-o' style='color:#12960E'></i>";
+    }
+    return str;
+  };
+
+  var blueballMarker = function(pos){
+    var blueball='/public/img/bluecircle.png';
+    var marker = new google.maps.Marker({
+      position:pos,
+      map:map,
+      icon:blueball
+    });
+  };
+  var geocode = function(latlng) {
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        console.log(results);
+      } else {
+        alert("Geocoder failed due to: " + status);
+      }
+    });
+  }; // actually reverse geocoding
+  var handleNoGeolocation = function(errorFlag) {
+    var content;
+    if (errorFlag) {
+      content = 'Error: The Geolocation service failed.';
+    } else {
+      content = 'Error: Your browser doesn\'t support geolocation.';
+    }
+
+    var options = {
+      map: map,
+      position: new google.maps.LatLng(60, 105),
+      content: content
+    };
+
+    var infowindow = new google.maps.InfoWindow(options);
+    map.setCenter(options.position);
+  };
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+<div id="map-canvas"/>
