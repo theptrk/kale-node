@@ -25,8 +25,16 @@ spotRouter.route('/nearby')
 
 spotRouter.route('/addspot')
   .get(function(req, res){
-    res.render('spot/addspot');
+    res.render('spot/addspot', {
+      user : req.user // get the user out of session and pass to template
+    });
   });
+// app.get('/auth', directProfile, function(req, res){
+//   res.render('auth/auth', {
+//     user : req.user // get the user out of session and pass to template
+//   });
+// });
+
 
 // spotRouter.route('/geocode/:pos_latlng')
 //   .get()
