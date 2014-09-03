@@ -18,7 +18,7 @@
       </ul> -->
       <ul class="nav navbar-nav navbar-right">
         {% if user.displayName.length > 0 %}
-        <li class=""><a href="/feed" title="">Feed</a></li>
+        <!-- <li class=""><a href="/feed" title="">Feed</a></li> -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.displayName}} <span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -31,6 +31,9 @@
             <li class=""><a href="/auth" title="">Sign up</a></li>
           {% endif %}
         </li>
+      {% if user.displayName.length > 0 %}
+        <li><a href="/addspot" id="penpadbtn"><i class="fa fa-pencil-square-o penpad"></i></a></li>
+      {% endif %}
       </ul>
     </div><!--/.nav-collapse -->
   </div>
