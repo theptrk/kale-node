@@ -23,6 +23,11 @@ spotRouter.route('/nearby')
     res.render('nearby');
   });
 
+spotRouter.route('/addspot')
+  .get(function(req, res){
+    res.render('spot/addspot');
+  });
+
 // spotRouter.route('/geocode/:pos_latlng')
 //   .get()
 
@@ -138,6 +143,7 @@ spotRouter.route('/api/spots/:spot_id')
     });
   });
 
+// test nearby functionality 
 spotRouter.route('/api/nearby')
   .get(function(req, res){
     Spot.find({
@@ -155,6 +161,25 @@ spotRouter.route('/api/nearby')
       res.json(spots);
     });
   });
+
+spotRouter.route('/api/nearby/lat/lng')
+  .get(function(req, res){
+    Spot.find({
+      'location':
+      { 
+        $near: [ req.params.lat, req.params.lng ]
+        //, $maxDistance: '3'
+      }
+    })
+    .limit(50)
+    .exec(function(err, spots){
+      if (err) {
+        res.send(err);
+      }
+      res.json(spots);
+    });
+  });
+
 // dev tool - population
   spotRouter.route('/test/populate')
     .get(function(req, res){
@@ -198,10 +223,10 @@ spotRouter.route('/api/nearby')
   spotRouter.route('/test/popreviews')
     .get(function(req, res){
       var authors = [
-        "53f4f5511ad6b75d771c2cf2", 
+        "540376d96457ad657f4c293b", 
         '53f84c28cfe5e6a6bc0002ec', 
         '53f84c37cfe5e6a6bc0002f7', 
-        "53f4f5511ad6b75d771c2cf2"];
+        "540376d96457ad657f4c293b"];
       var bodies = ['Pizza', 'BBQ', 'Early Bird', 'Cheers!'];
       
       Spot.find(function(err, spots){
