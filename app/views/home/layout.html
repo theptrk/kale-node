@@ -1,0 +1,104 @@
+<!-- auth/base -->
+<!doctype html>
+<html>
+<head>
+  <title>Kalenuats Home</title>
+  {% include "require/bootstrapcss.html" %}
+  {% include "require/moment.html" %}
+  <link rel="stylesheet" href="public/css/home/index.css">
+</head>
+<body>
+  {% include "header/home.html" %}
+  {% block content %}{% endblock %}
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        {% if user %}
+        {% else %}
+          {% include "include/cta.html" %}
+        {% endif %}
+        <h3>Recent Kale Sightings</h3>
+        <div id="feed-container"></div>
+
+        <h3>Best of</h3>
+        <div id="best-container"></div>
+      </div>
+
+      <div class="col-sm-8 hidden-xs right-side">
+        <!-- <div class="col-sm-12 profile-card">
+          <div class="profile-left">
+            <img class="profile-pic" src="{{user.facebook.photos}}" alt="">
+          </div>
+          <div class="profile-right">
+            <span>{{user.displayName}}</span><br>
+            <span>Extra info</span>
+            <span>Extra info</span>
+          </div>
+        </div> -->
+
+        {% set google_maps_height = '400px' %}
+        {% include "include/nearby.html" %}
+      </div>
+    </div>
+  </div>
+  {% include "require/jquery.html" %}
+  {% include "require/bootstrapjs.html" %}
+  <script>
+    $(document).ready(function() {
+
+      $.ajax({
+        type: "GET",
+        url: "/api/feed"
+      })
+      .done(function( data ) {
+        $.each(data, function(i, v){
+          $("#feed-container").append(
+            "<h4><a href=spot/" + v.spot._id + ">" + v.spot.name + "</a>" +
+            "<small class='timeago'> " + moment(v.created, "").fromNow() + "</small>" +
+            "</h4>" +
+            "<strong><a href=user/" + v.author._id + ">" + 
+              v.author.displayName + "</a></strong> " +
+            "<span>" + v.body + "</span>"
+            ).bind(v);
+        });
+      });
+
+      var starMaker = function(num) {
+        num = Number(num);
+        var str = "";
+        for (var i = 0; i < Math.floor(num); i++) {
+          str += "<i class='fa fa-star' style='color:#12960E'></i>";
+        }
+        if (num !== Math.floor(num)) {
+          str += "<i class='fa fa-star-half-o' style='color:#12960E'></i>";
+        }
+        return str;
+      };
+
+      $.ajax({
+        type: "GET",
+        url: "/api/nearby"
+      })
+      .done(function( data ) {
+        $.each(data, function(i, v){
+          //console.log(v);
+          makeMarker([v.location[0], v.location[1]], v.name, String(v.average));
+        });
+
+        var sorted = data.sort(function(a, b) {
+          return b.average - a.average;
+        });
+        for (var i = 0; i < 3; i++) {
+          var stars = starMaker(sorted[i].average);
+          $("#best-container").append(
+              "<a href=spot/" + sorted[i]._id + ">" + 
+                sorted[i].name + "</a> " + stars + "</span><br>"
+            );
+        }
+      });
+
+    });
+  </script>
+</body>
+</html> 
