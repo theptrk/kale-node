@@ -1,0 +1,78 @@
+<!-- auth/base -->
+<!doctype html>
+<html>
+<head>
+  <title>Kalenuats Home</title>
+  {% include "require/bootstrapcss.html" %}
+  {% include "require/moment.html" %}
+  <link rel="stylesheet" href="public/css/spot/addspot.css">
+</head>
+<body>
+  {% include "header/home.html" %}
+  {% block content %}{% endblock %}
+  
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-8 hidden-xs right-side">
+
+        <!-- This is used by the typeahead script -->
+        <h3>Typeahead.js</h3>
+          <div id="typeahead">
+            <input class="typeahead" type="text" placeholder="Kale Spots" id="textinput">
+          </div>
+
+      </div>
+
+      <div class="col-sm-4">
+        <h3>col-sm-4</h3>
+      </div>
+
+    </div>
+  </div>
+  {% include "require/jquery.html" %}
+  {% include "require/bootstrapjs.html" %}
+  <script src="bower/typeahead.js/dist/typeahead.bundle.min.js"></script>
+  <script src="bower/typeahead.js/dist/typeahead.jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+
+      var starMaker = function(num) {
+        num = Number(num);
+        var str = "";
+        for (var i = 0; i < Math.floor(num); i++) {
+          str += "<i class='fa fa-star' style='color:#12960E'></i>";
+        }
+        if (num !== Math.floor(num)) {
+          str += "<i class='fa fa-star-half-o' style='color:#12960E'></i>";
+        }
+        return str;
+      };
+
+      // $.ajax({
+      //   type: "GET",
+      //   url: "/api/nearby"
+      // })
+      // .done(function( data ) {
+      //   $.each(data, function(i, v){
+      //     //console.log(v);
+      //     makeMarker([v.location[0], v.location[1]], v.name, String(v.average));
+      //   });
+
+      //   var sorted = data.sort(function(a, b) {
+      //     return b.average - a.average;
+      //   });
+      //   for (var i = 0; i < 3; i++) {
+      //     var stars = starMaker(sorted[i].average);
+      //     $("#best-container").append(
+      //         "<a href=spot/" + sorted[i]._id + ">" + 
+      //           sorted[i].name + "</a> " + stars + "</span><br>"
+      //       );
+      //   }
+      // });
+
+    });
+  </script>
+  {% include "spot/typeahead.html" %}
+</body>
+</html> 
