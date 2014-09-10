@@ -1,3 +1,10 @@
+<style>
+  #textinput .empty-message {
+    padding: 5px 10px;
+   text-align: center;
+  }
+</style>
+<script src="bower/handlebars/handlebars.min.js"></script>
 <script>
   $("#textinput").on("keypress", function(e) {
       if(e.which == 13) {
@@ -8,52 +15,38 @@
 
   var spots;
 
-  var substringMatcher = function(strs) {
-    return function findMatches(q, process) {
-      var matches, substrRegex;
-   
-      // an array that will be populated with substring matches
-      matches = [];
-   
-      // regex used to determine if a string contains the substring `q`
-      substrRegex = new RegExp(q, 'i');
-   
-      // iterate through the pool of strings and for any string that
-      // contains the substring `q`, add it to the `matches` array
-      $.each(strs, function(i, str) {
-        if (substrRegex.test(str)) {
-          // the typeahead jQuery plugin expects suggestions to a
-          // JavaScript object, refer to typeahead docs for more info
-          matches.push({ value: str });
-        }
-      });
-   
-      process(matches);
-    };
-  };
-   
   $.ajax({
     type: "GET",
     url: "/api/spots"
   })
   .done(function( data ) {
     spots = [];
+    spots_to_id = {};
     data.forEach(function(v){
       spots.push(v.name);
+      spots_to_id[v.name] = {
+        average: v.average,
+        id: v._id
+      };
     });
-    $('#typeahead .typeahead').typeahead({
-      hint: true,
-      highlight: true,
-      minLength: 1
-    },
+    
+    spots = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      // `spots` is an array of state names defined in "The Basics"
+      local: $.map(spots, function(spot) { return { value: spot }; })
+    });
+    spots.initialize();
+
+    $('#typeahead .typeahead').typeahead(null,
     {
       name: 'spots',
-      displayKey: function(e){
-        console.log(e);
-        return e.value + "!";
-      },
-      //displayKey: "value"
-      source: substringMatcher(spots)
+      // displayKey: function(e){
+      //   console.log(e);
+      //   return e.value + "<small>!</small>";
+      // },
+      displayKey: "value",
+      source: spots.ttAdapter(),
     });
   });
 </script>
